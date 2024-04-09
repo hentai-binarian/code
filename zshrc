@@ -6,7 +6,6 @@ export SCREENDIR=$HOME/.screen
 # エイリアス
 alias ...="cd ../../"
 alias ....="cd ../../../"
-alias c="clear"
 alias l="ls -ahlsF  --color=auto"
 alias ls="ls -aF --color=auto"
 alias mv="mv -iv"
@@ -22,7 +21,6 @@ alias v="vim"
 alias dd="dd status=progress"
 alias objdump="objdump -M intel"
 alias mingw32-gcc="x86_64-w64-mingw32-gcc"
-alias xxd="busybox xxd"
 
 WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
 
