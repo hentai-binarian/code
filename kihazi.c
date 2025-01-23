@@ -5,7 +5,7 @@ int main(int argc, char *argv[]){
     double sped, time, dist;
     int numb;
     while(1){
-        puts("番号を選択してください");
+        puts("番号を選択してください。");
         puts("1:距離を求める。");
         puts("2:速度を求める。");
         puts("3:時間を求める。");
