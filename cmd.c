@@ -58,7 +58,7 @@ int main() {
 
             STARTUPINFO si = { sizeof(si) };
             PROCESS_INFORMATION pi;
-            CreateProcess(NULL, cmd, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi);
+            CreateProcess(NULL, command, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi);
             break;
         }
         Sleep(1000); 
