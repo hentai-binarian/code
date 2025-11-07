@@ -8,10 +8,6 @@
 #define CONFIG_FILE "config.txt"
 #define MAX_CMD_LEN 256
 
-void trim_newline(char *str) {
-    str[strcspn(str, "\n")] = 0;
-}
-
 int main() {
     char cmd[MAX_CMD_LEN];
     int target_hour, target_minute;
