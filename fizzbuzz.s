@@ -2,104 +2,104 @@
 .global main
 
 .section .rodata    # ここに文字列
-fizz:
+f:
     .ascii "Fizz\n"
-buzz:
+b:
     .ascii "Buzz\n"
-fizzbuzz:
+fb:
     .ascii "FizzBuzz\n"
 n:
     .ascii "\n"
 
 .section .text
 main:
-    sub rsp, 2
-    # 割る数３はr15
-    # 割る数５はr14
-    # レジスタ、メモリの初期化ダルい...😥
-    mov r14, 5           
-    mov r15, 3          
-    xor rax, rax
-    xor rcx, rcx
-    mov QWORD PTR [rsp], rax
-    mov BYTE PTR [rsp], 1   # 割られる数
-    mov rcx, 1
-.loop:
-    xor rdx, rdx            # rdxを初期化
-    xor rax, rax            # raxを初期化
-    mov al, BYTE PTR [rsp]
+    push rbp
+    mov rbp, rsp
+    mov r13, 1 # 割られる数
+    mov r14, 3 # 割る数3 
+    mov r15, 5 # 割る数5
+    jmp cmp_fizzbuzz
+
+cmp_fizzbuzz:
+    xor rdx, rdx
+    mov rax, r13
+    div r14
+    cmp rdx, 0 
+    jne cmp_buzz # fizzではない
+    xor rdx, rdx
+    mov rax, r13
     div r15
     cmp rdx, 0
-    jz .fizz_yes            # fizzであった場合
-    xor rax, rax
+    jne call_fizz # fizzだった
+    call fizzbuzz # fizzbuzzだった
+    jmp cmp_exit
+
+call_fizz:
+    call fizz
+    jmp cmp_exit
+
+cmp_buzz:
     xor rdx, rdx
-    mov al, BYTE PTR [rsp]
-    div r14
+    mov rax, r13
+    div r15
     cmp rdx, 0
-    jz .b                   # buzz
-    xor rax, rax
-    mov al, BYTE PTR [rsp]
-    mov BYTE PTR [rsp+1], al
-    add BYTE PTR [rsp+1], 0x30
-    lea rsi, [rsp+1]
-    call .write              # 数字を表示
-    lea rsi, [rip+n]
-    call .write              # 改行
-    inc BYTE PTR [rsp]       # インクリメント 
-    cmp BYTE PTR [rsp], 0x10
-    jz .shift
-.cmp:
-    inc rcx
-    cmp rcx, 100
-    jz .exit
-    jmp .loop                # 最初にもどる
-.shift:
-    shr BYTE PTR [rsp], 4
-    jmp .cmp    
-.fizz_yes:
-    xor rdx, rdx    
-    xor rax, rax   
-    mov al, BYTE PTR [rsp]
-    div r14
-    cmp rdx, 0
-    jz .fz          # fizzbuzz
-    jmp .f         # fizz
+    jne number # fizzでもbuzzでもないなら数字を表示
+    call buzz # buzzだった
+    jmp cmp_exit
+
+number:
+    mov r12, r13
+    add r12, 0x30
+    mov rsi, r12
+    call print
+    lea rsi, [n]
+    call print
+    jmp cmp_exit
+
+cmp_exit:
+    cmp r13, 100
+    je exit
+    inc r13
+    jmp cmp_fizzbuzz
 
 # fizzbuzzと表示
-.fz:     
+fizzbuzz:     
     mov rax, 1
     mov rdi, 1
+    lea rsi, [fb]
     mov rdx, 9
-    lea rsi, [rip+fizzbuzz]
-    syscall
-    add BYTE PTR [rsp], 1
-    jmp .loop
-# fizzと表示
-.f:
-    mov rax, 1
-    mov rdi, 1
-    mov rdx, 5
-    lea rsi, [rip+fizz]
-    syscall
-    add BYTE PTR [rsp], 1
-    jmp .loop
-# buzzと表示
-.b:
-    mov rax, 1
-    mov rdi, 1
-    mov rdx, 5
-    lea rsi, [rip+buzz]
-    syscall
-    add BYTE PTR [rsp], 1
-    jmp .loop
-# 数字を表示
-.write:
-    mov rax, 1
-    mov rdx, 1
-    mov rdi, 1
     syscall
     ret
+
+# fizzと表示
+fizz:
+    mov rax, 1
+    mov rdi, 1
+    lea rsi, [f]
+    mov rdx, 5
+    syscall
+    ret
+
+# buzzと表示
+buzz:
+    mov rax, 1
+    mov rdi, 1
+    lea rsi, [b]
+    mov rdx, 5
+    syscall
+    ret
+
+# 数字を表示
+print:
+    mov rax, 1
+    mov rdi, 1
+    mov rdx, 1
+    syscall
+    ret
+
 #プログラムを終了
-.exit:
+exit:
+    mov rdi, 0
     mov rax, 60
     syscall
+
