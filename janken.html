@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>じゃんけん</title>
+</head>
+<style>
+  button {
+    font-size: 30px;
+    padding: 10px;
+    margin: 5px;
+  }
+  #result {
+    font-size: 20px;
+    margin-top: 20px;
+  }
+</style>
+<body>
+  <button onclick="goo()">グー</button>
+  <button onclick="choki()">チョキ</button>
+  <button onclick="par()">パー</button>
+  <div id="result"></div>
+
+  <script>
+    var id = document.getElementById("result");
+    var hand = ["グー", "チョキ", "パー"];
+    var wl = ["あいこ", "あなたの勝ち", "コンピュータの勝ち"];
+    var cnt = 1;
+    var comp = "";
+    var res = "";
+
+    function goo() {
+      comp = random();
+      res = cnt + "回目<br>" + "あなた：グー" + "<br>" + "コンピュータ：" + comp + "<br>" + judge("グー", comp) + "<br><br>";
+      id.insertAdjacentHTML("afterbegin", res);
+      cnt++;
+    }
+    function choki() {
+      comp = random();
+      res = cnt + "回目<br>" + "あなた：チョキ" + "<br>" + "コンピュータ：" + comp + "<br>" + judge("チョキ", comp) + "<br><br>";
+      id.insertAdjacentHTML("afterbegin", res);
+      cnt++;
+    }
+    function par() {
+      comp = random();
+      res = cnt + "回目<br>" + "あなた：パー" + "<br>" + "コンピュータ：" + comp + "<br>" + judge("パー", comp) + "<br><br>";
+      id.insertAdjacentHTML("afterbegin", res);
+      cnt++;
+    }
+    function random(){
+      const rand = Math.floor(Math.random() * hand.length);
+      //id.innerHTML += "rand:" + rand + "<br>";
+      return hand[rand];
+    }
+    function judge(you, comp) {
+      if (you === comp) {
+        return wl[0];
+      } else if (
+        (you === "グー" && comp === "チョキ") ||
+        (you === "チョキ" && comp === "パー") ||
+        (you === "パー" && comp === "グー")
+      ) {
+        return wl[1];
+      } else {
+        return wl[2];
+      }
+    }
+  </script>
+
+</body>
+</html>
